@@ -36,9 +36,9 @@ const message = async (msg) => {
 };
 
 const emitNewMessage = (message) => {
-  activeSocket.emit('new message', message.message);
+  activeSocket.emit('new message', message);
 }
 
 const emitErrorMessage = (err) => {
-  activeSocket.emit('error message', err.message);
+  activeSocket.emit('error message', { message: err.message, createdAt: new Date() });
 }

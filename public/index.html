@@ -58,6 +58,15 @@
     #messages>li:nth-child(odd) {
       background: #efefef;
     }
+
+    li p {
+      display: inline;
+    }
+
+
+    span {
+      float: right;
+    }
   </style>
 </head>
 
@@ -69,10 +78,10 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
+    const socket = io();
 
-    var form = document.getElementById('form');
-    var input = document.getElementById('input');
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -83,15 +92,32 @@
     });
 
     socket.on('new message', (message) => {
-      var li = document.createElement('li');
-      li.textContent = message;
+      const p = document.createElement('p');
+      const span = document.createElement('span');
+      const li = document.createElement('li');
+
+      p.textContent = message.message;
+      span.textContent = message.createdAt;
+
+      li.appendChild(p);
+      li.appendChild(span);
+
       document.getElementById('messages').appendChild(li);
     });
 
     socket.on('error message', (message) => {
-      var li = document.createElement('li');
-      li.textContent = message;
+      const p = document.createElement('p');
+      const span = document.createElement('span');
+      const li = document.createElement('li');
+
+      p.textContent = message.message;
+      span.textContent = message.createdAt;
+
+      li.appendChild(p);
+      li.appendChild(span);
+
       li.style.color = 'red';
+
       document.getElementById('messages').appendChild(li);
     });
   </script>
