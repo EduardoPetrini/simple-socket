@@ -81,6 +81,19 @@
         input.value = '';
       }
     });
+
+    socket.on('new message', (message) => {
+      var li = document.createElement('li');
+      li.textContent = message;
+      document.getElementById('messages').appendChild(li);
+    });
+
+    socket.on('error message', (message) => {
+      var li = document.createElement('li');
+      li.textContent = message;
+      li.style.color = 'red';
+      document.getElementById('messages').appendChild(li);
+    });
   </script>
 </body>
 

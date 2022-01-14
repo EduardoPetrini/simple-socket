@@ -3,6 +3,8 @@ const http = require('http');
 
 const MessageService = require('./services/MessageService');
 
+let activeSocket;
+
 module.exports.start = (app) => {
   const server = http.createServer(app);
   const io = new Server(server);
@@ -12,6 +14,7 @@ module.exports.start = (app) => {
 };
 
 const connected = (socket) => {
+  activeSocket = socket;
   console.log('Socket Connected')
   socket.on('disconnect', disconnected);
   socket.on('chat message', message);
@@ -24,9 +27,18 @@ const disconnected = (socket) => {
 const message = async (msg) => {
   try {
     const response = await MessageService.save(msg);
-    console.log(response);
+    emitNewMessage(response);
   } catch (err) {
-    console.log(`Error to persist message: ${err.message}`);
+    console.log(`Error: ${err.message}`);
     console.log(err);
+    emitErrorMessage(err);
   }
 };
+
+const emitNewMessage = (message) => {
+  activeSocket.emit('new message', message.message);
+}
+
+const emitErrorMessage = (err) => {
+  activeSocket.emit('error message', err.message);
+}
